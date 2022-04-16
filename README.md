@@ -24,4 +24,5 @@ can be given, which in turn will be run by CSCript.
 
 [1] The issue was caused by certain splicers that were not preserved upon
 saving the document. Lurking online, it seems that most "easy to use
-libraries" like **openpyxl** do not take those features into consideration.
+libraries" like **openpyxl** did not take those features into consideration
+as far as I could find.
