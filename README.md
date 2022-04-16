@@ -1,5 +1,6 @@
 # VBW
-#### Python Wrapper for Microsoft's VB (via a custom VBS interpreter).
+#### Python Wrapper for Microsoft's VB (via a custom VBS interpreter). ![](logo.png)
+
 
 
 Trying to help an acquaintance automatize their Excel work-flow via Python,
