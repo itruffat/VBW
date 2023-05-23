@@ -14,7 +14,7 @@ a VBS program that works as an interactive interpreter. (a.k.a. the wrapper) By
 building on top of it, Python "wrappers" can access VBS functionality without 
 having to interpret or abstract anything of their own.
 
-This is focused on helping beginners and people that don't want to learn the ropes 
+Focused on helping beginners and people that don't want to learn the ropes 
 behind VB, but want to work and access some of its features. Just writing a few 
 snippets of it (possible obtained online) and keep on working on Python.
 
