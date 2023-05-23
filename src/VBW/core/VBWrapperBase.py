@@ -1,6 +1,6 @@
 from subprocess import PIPE, Popen
 import os
-from VBErrorDictionary import errorDictionary
+from core.VBErrorDictionary import errorDictionary
 
 class VB_ERROR(SyntaxError):
     pass

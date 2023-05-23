@@ -1,5 +1,5 @@
 import os
-from VBWrapperBase import VB_WRAPPER_BASE
+from core.VBWrapperBase import VB_WRAPPER_BASE
 
 """WIP, please use simpleExcel instead"""
 

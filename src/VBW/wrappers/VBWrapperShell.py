@@ -1,4 +1,4 @@
-from VBWrapperBase import VB_WRAPPER_BASE
+from core.VBWrapperBase import VB_WRAPPER_BASE
 
 """
 This shell uses a recoverAfterFailure command to save the shell from failure after an error.
