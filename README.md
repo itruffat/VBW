@@ -9,9 +9,7 @@ for ways to "seamlessly" integrate it into Python.
 This is different from the many libraries that already exists to interact with 
 the office suite (***xlswings** -> Excel, **python-docx** -> Word, **python-pptx** 
 -> Power-Point,etc.*), as they have their own abstractions and might lose some 
-of VBS power.
-
-Instead, **VB Wrapper** provides access to native VBS, just calling
+of VBS power. Instead, **VB Wrapper** provides access to native VBS, just calling
 a VBS program that works as an interactive interpreter. (a.k.a. the wrapper) By 
 building on top of it, Python "wrappers" can access VBS functionality without 
 having to interpret or abstract anything of their own.
