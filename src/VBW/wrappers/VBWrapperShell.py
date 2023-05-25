@@ -24,7 +24,7 @@ class VB_WRAPPER_SHELL(VB_WRAPPER_BASE):
         else:
             command = """wscript.echo \"\"!>!>!>INVALID-INPUT\"\" """
         if command not in self.cGetRecoveryCommandsArray():
-            self.cAddRecoveryCommand(command)
+            self.cAddRecoveryCommandFirst(command)
         answer = ""
         while answer not in ["!>!>!>END\n","!>!>!>INVALID-INPUT\n"]:
             answer = self.communicateWithInterpreter(input())

@@ -9,7 +9,7 @@ end if
 ''''''''''' FUNCTIONS
 '''''''''''''''''
 
-' INTERPRETE A SINGLE LINE
+' INTERPRET A SINGLE LINE
 Function ParseLine (inputStr)
     inputStrLCase = LCase(inputStr)
     ' EXIT PROGRAM
@@ -48,7 +48,7 @@ Function recoverFromError(errorNumber)
         wscript.echo errorNumber
     end if
     ' RETURN
-        recoverFromError = continueRunningAfterRecovery
+    recoverFromError = continueRunningAfterRecovery
 End Function
 
 ''''''''''' INTERPRETERS
@@ -67,6 +67,7 @@ End Sub
 ' FILE INTERPRETER
 Sub fileInterpreter(fileWithCodePath)
     wscript.echo fileWithCodePath
+
     Set fso = CreateObject("Scripting.FileSystemObject")
     Set inputFile = fso.OpenTextFile (fileWithCodePath, 1)
     Do Until inputFile.AtEndOfStream

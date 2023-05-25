@@ -1,75 +1,35 @@
-from subprocess import PIPE, Popen
-import os
-from core.VBErrorDictionary import errorDictionary
+from core.VBInterpreterProcess import INTERPRETER_PROCESS
 
-class VB_ERROR(SyntaxError):
-    pass
-
-class INTERPRETER_PROCESS:
-    def __init__(self, cScript, iScript, silenceExceptions):
-        self.p = Popen([cScript,
-                        '//nologo',
-                        iScript],
-                       stdout=PIPE,
-                       stdin=PIPE,
-                       encoding='ascii')
-        self.errorStatus = 0
-        self.silenceExceptions = silenceExceptions
-
-    def communicate(self, message, printing=True):
-        assert self.p is not None
-        assert self.errorStatus == 0
-        self.p.stdin.write(message + "\n")
-        self.p.stdin.flush()
-        answer = self.p.stdout.readline()
-        if "\n" not in answer or answer == "!>!>!>ERROR\n":
-            self.p.kill()
-            self.errorStatus = 1 if "\n" not in answer else 2 
-            if not self.silenceExceptions:
-                if "\n" in answer:
-                    errorNumber = self.p.stdout.readline()[:-1]
-                    error = errorDictionary[errorNumber] if errorNumber in errorDictionary else errorNumber
-                    errorMessage = f"VBS interpreter failed with error({error}) after receiving message: \"{message}\""
-                else:
-                    errorMessage = f"No response from VBS interpreter after message: \"{message}\""
-                raise VB_ERROR(errorMessage)
-            return "!>!>!>END\n"
-        else:
-            if printing:
-                print(answer, end="")
-            return answer
-
-    def kill(self):
-        self.p.kill()
-        self.p = None
 
 class VB_WRAPPER_BASE:
 
     # WRAPPER
-    def __init__(self, path2CScript = None, path2InterpreterScript = None, silenceExceptions = True):
+
+    def __init__(self, path2CScript=None, path2InterpreterScript=None,
+                 silenceExceptions=True, default_startup_commands=None):
         self.cScript = path2CScript
         self.iScript = path2InterpreterScript
         self.silenceExceptions = silenceExceptions
         self.history = []
         self.interpreter = None
-        # It goes to the default path of CScript.exe in the most common configurations
-        if path2CScript is None:
-            self.cScript = "C:/Windows/System32/CScript.exe"
-        # By default it looks for the interactive interpreter inside the same directory as the main file
-        if path2InterpreterScript is None:
-            self.iScript = os.path.join(os.path.split(os.path.realpath(__file__))[0], "interactive_interpreter.vbs")
+        self.default_startup_commands = default_startup_commands
+
+    def has_healthy_interpreter(self):
+        return self.interpreter is not None and self.interpreter.healthy()
 
     # Interpreter Manipulation
 
     def createInterpreter(self,  startup_commands=None):
         if self.interpreter is not None:
             self.interpreter.kill()
+        if startup_commands is None:
+            startup_commands = self.default_startup_commands
         self.history = []
         self.interpreter = INTERPRETER_PROCESS(self.cScript, self.iScript, self.silenceExceptions)
-        self.interpreterInitialization( startup_commands= [] if startup_commands is None else startup_commands)
+        self.interpreterInitialization(startup_commands=[] if startup_commands is None else startup_commands)
 
     def communicateWithInterpreter(self, message, printing=True, recording=True):
-        assert self.interpreter is not None
+        assert self.has_healthy_interpreter()
         if self.doRecordMessage(message,recording):
             self.history.append(message)
         return self.interpreter.communicate(message,printing)
@@ -78,12 +38,12 @@ class VB_WRAPPER_BASE:
         return recording
 
     def interpreterInitialization(self, startup_commands):
-        assert self.interpreter is not None
+        assert self.has_healthy_interpreter()
         for sc in startup_commands:
             self.communicateWithInterpreter(sc, printing=False, recording=False)
 
     def destroyInterpreter(self):
-        assert self.interpreter is not None
+        assert self.has_healthy_interpreter()
         self.cExit()
         self.interpreter.kill()
         self.history = []
@@ -92,14 +52,17 @@ class VB_WRAPPER_BASE:
     # Core Commands
 
     def cExec(self,message, printing=False, recording=True):
+        assert self.has_healthy_interpreter()
         message_sent = self.communicateWithInterpreter(message + "'x", printing= printing, recording= recording)
         return (message+"'x\n") == message_sent
 
     def cEval(self,message, printing=True, recording=True):
+        assert self.has_healthy_interpreter()
         answer = self.communicateWithInterpreter(message, printing= printing, recording= recording)[:-1]
         return answer
 
     def cExit(self):
+        assert self.has_healthy_interpreter()
         return self.communicateWithInterpreter("'e", printing=False, recording=False)
 
     # Recovery commands
@@ -139,3 +102,14 @@ class VB_WRAPPER_BASE:
             return True
 
         return False
+
+    # Context managers
+
+    def __enter__(self):
+        if not self.has_healthy_interpreter():
+            self.createInterpreter()
+        return self
+
+    def __exit__(self, _type, _value, _traceback):
+        if self.has_healthy_interpreter():
+            self.destroyInterpreter()
