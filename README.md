@@ -27,6 +27,7 @@ on Python.
         with VB_OBJECT_WRAPPER.start_with("Excel.Application") as shell:
 
             shell.cExec(f"Set objWorkbook = {shell.objects[0]}.Workbooks.Open(\"{filepath}\") ")
+            shell.cAddExitCommand("objWorkbook.close")
             
             n = int(shell.cEval("objWorkbook.Sheets.count", printing=False))
             names = [shell.cEval(f"objWorkbook.Sheets({i}).Name", printing=False) for i in range(1, n + 1)]
@@ -34,7 +35,6 @@ on Python.
             if "barkeep" in names:
                 ammount_of_excels_with_sheets_named_barkeep += 1
 
-            shell.cExec("objWorkbook.close")
 
     print(ammount_of_excels_with_sheets_named_barkeep)
 

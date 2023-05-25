@@ -24,6 +24,6 @@ class VB_OBJECT_WRAPPER(VB_WRAPPER_BASE):
         self.dynamic_counter += 1
 
         self.cExec("Set {} = CreateObject(\"{}\")".format(dynamic_object, _object))
-        self.cAddRecoveryCommand("{}.Quit".format(dynamic_object))
+        self.cAddExitCommand("{}.Quit".format(dynamic_object))
 
         return dynamic_object

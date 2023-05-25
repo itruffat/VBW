@@ -42,9 +42,11 @@ class VB_WRAPPER_BASE:
         for sc in startup_commands:
             self.communicateWithInterpreter(sc, printing=False, recording=False)
 
-    def destroyInterpreter(self):
+    def destroyInterpreter(self, noisy=False):
         assert self.has_healthy_interpreter()
-        self.cExit()
+        exitmsg = self.cExit()
+        if noisy:
+            print(exitmsg)
         self.interpreter.kill()
         self.history = []
         self.interpreter = None
@@ -65,43 +67,61 @@ class VB_WRAPPER_BASE:
         assert self.has_healthy_interpreter()
         return self.communicateWithInterpreter("'e", printing=False, recording=False)
 
-    # Recovery commands
+    # Recovery/Exiting commands
 
-    def cGetRecoveryCommandsArray(self):
-        n = self.cEval("UBound(recoveryCommandsArray)", printing=False, recording=False)
-        recoveryCommandsArray = [self.cEval(f"recoveryCommandsArray({n})", printing=False, recording=False) for n in range(int(n)+1)]
-        return recoveryCommandsArray
+    def _cGetCommandsArray(self, array):
+        n = self.cEval(f"UBound({array})", printing=False, recording=False)
+        arrayCommands = [self.cEval(f"{array}({n})", printing=False, recording=False) for n in range(int(n)+1)]
+        return arrayCommands
 
-    def cAddRecoveryCommand(self, recoveryCommand):
-        recoveryCommandsArray = self.cGetRecoveryCommandsArray()
+    def _cAddArrayCommand(self, array, command):
+        commandsArray = self._cGetCommandsArray(array)
         try:
-            index = recoveryCommandsArray.index("")
+            index = commandsArray.index("")
         except ValueError:
-            index = len(recoveryCommandsArray)
-            self.cExec(f"ReDim Preserve recoveryCommandsArray({index})")
-        self.cExec(f"recoveryCommandsArray({index}) = \"{recoveryCommand}\"")
+            index = len(commandsArray)
+            self.cExec(f"ReDim Preserve {array}({index})")
+        self.cExec(f"{array}({index}) = \"{command}\"")
 
-    def cAddRecoveryCommandFirst(self, recoveryCommand):
-        recoveryCommandsArray = self.cGetRecoveryCommandsArray()
-        index = len(recoveryCommandsArray)
-        self.cExec(f"ReDim recoveryCommandsArray({index})")
-        self.cExec(f"recoveryCommandsArray(1) = \"{recoveryCommand}\"")
-        for x in range(len(recoveryCommandsArray)):
-            self.cExec(f"recoveryCommandsArray({x+1}) = \"{recoveryCommandsArray[x]}\"")
+    def _cAddArrayCommandFirst(self, array, command):
+        commandsArray = self._cGetCommandsArray(array)
+        index = len(commandsArray)
+        self.cExec(f"ReDim {array}({index})")
+        self.cExec(f"{array}(1) = \"{command}\"")
+        for x in range(len(commandsArray)):
+            self.cExec(f"{array}({x+1}) = \"{commandsArray[x]}\"")
 
-    def cRemoveRecoveryCommand(self, recoveryCommand):
-        recoveryCommandsArray = self.cGetRecoveryCommandsArray()
-        if recoveryCommand in recoveryCommandsArray:
-            index = recoveryCommandsArray.index(recoveryCommand)
-            for i in range(index+1, len(recoveryCommandsArray)):
-                self.cExec(f"recoveryCommandsArray({i-1}) = \"{recoveryCommandsArray[i]}\"")
-            if len(recoveryCommandsArray) > 1:
-                self.cExec(f"ReDim Preserve recoveryCommandsArray({len(recoveryCommandsArray)-2})")
+    def _cRemoveArrayCommand(self, array, command):
+        commandsArray = self._cGetCommandsArray(array)
+        if command in commandsArray:
+            index = commandsArray.index(command)
+            for i in range(index+1, len(commandsArray)):
+                self.cExec(f"{array}({i-1}) = \"{commandsArray[i]}\"")
+            if len(commandsArray) > 1:
+                self.cExec(f"ReDim Preserve {array}({len(commandsArray)-2})")
             else:
-                self.cExec(f"recoveryCommandsArray({index}) = \"\"")
+                self.cExec(f"{array}({index}) = \"\"")
             return True
 
         return False
+
+    def cGetRecoveryCommandsArray(self):
+        return self._cGetCommandsArray("recoveryCommandsArray")
+    def cAddRecoveryCommand(self, recoveryCommand):
+        return self._cAddArrayCommand("recoveryCommandsArray", recoveryCommand)
+    def cAddRecoveryCommandFirst(self, recoveryCommand):
+        return self._cAddArrayCommandFirst("recoveryCommandsArray", recoveryCommand)
+    def cRemoveRecoveryCommand(self, recoveryCommand):
+        return self._cRemoveArrayCommand("recoveryCommandsArray", recoveryCommand)
+
+    def cGetExitCommandsArray(self):
+        return self._cGetCommandsArray("exitCommandsArray")
+    def cAddExitCommand(self, exitCommand):
+        return self._cAddArrayCommand("exitCommandsArray", exitCommand)
+    def cAddExitCommandFirst(self, exitCommand):
+        return self._cAddArrayCommandFirst("exitCommandsArray", exitCommand)
+    def cRemoveExitCommand(self, exitCommand):
+        return self._cRemoveArrayCommand("exitCommandsArray", exitCommand)
 
     # Context managers
 

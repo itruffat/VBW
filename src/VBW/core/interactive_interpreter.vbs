@@ -51,6 +51,17 @@ Function recoverFromError(errorNumber)
     recoverFromError = continueRunningAfterRecovery
 End Function
 
+' EXIT ARRAY
+ReDim exitCommandsArray(0)
+exitCommandsArray(0) = ""
+Sub runExitArray()
+    x = UBound(exitCommandsArray)
+    while x >= 0
+        Execute(exitCommandsArray(x))
+        x = x - 1
+    wend
+End Sub
+
 ''''''''''' INTERPRETERS
 '''''''''''''''''
 
@@ -61,6 +72,7 @@ Sub interactiveInterpreter
         inputStr = rtrim(WScript.StdIn.ReadLine())
         continueLoop = ParseLine(inputStr)
     wend
+    runExitArray()
     wscript.echo "!>!>!>END"
 End Sub
 
@@ -82,6 +94,7 @@ End Sub
 '''''''''''''''''
 
 doInteractiveRun = True
+
 
 ' FILE RUN
 if WScript.Arguments.Unnamed.Count >= 1 then
