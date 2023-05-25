@@ -1,4 +1,4 @@
-from core.VBInterpreterProcess import INTERPRETER_PROCESS
+from VBCore.VBInterpreterProcess import INTERPRETER_PROCESS
 
 
 class VB_WRAPPER_BASE:

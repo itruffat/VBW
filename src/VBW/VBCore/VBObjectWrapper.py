@@ -1,4 +1,4 @@
-from core.VBWrapperBase import VB_WRAPPER_BASE
+from VBCore.VBWrapperBase import VB_WRAPPER_BASE
 
 
 class VB_OBJECT_WRAPPER(VB_WRAPPER_BASE):
@@ -31,4 +31,3 @@ class VB_OBJECT_WRAPPER(VB_WRAPPER_BASE):
         self.cAddRecoveryCommand(quit_command)
 
         return dynamic_object
-    

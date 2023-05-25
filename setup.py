@@ -1,17 +1,18 @@
-from setuptools import setup, find_packages
-
-p  = find_packages("src")
+from setuptools import setup
 
 setup(
     name='VBW',
-    version='0.0.0a1',
+    version='0.0.0a2',
     author='itrufat',
     description='A wrapper to run VBS from Python.',
     long_description='A Wrapper to run VBS from Python.',
     long_description_content_type='text/markdown',
     url='https://github.com/itruffat/JestingLang',
-    packages=['VBW', 'VBW.core', 'VBW.wrappers'] ,
+    packages=['VBW', 'VBW.VBCore', 'VBW.VBWrappers'],
     package_dir={'': 'src'},
+    package_data={
+        'VBW.VBCore': ['interactive_interpreter.vbs']
+    },
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

@@ -2,7 +2,7 @@
 #### Python Wrapper for Microsoft's VB (via a custom VBS interpreter). ![](logo.png)
 
 Despite being somewhat deprecated, VisualBasic is still a very-powerful tool 
-to manipulate Microsoft window in general, and programs in the office 
+to manipulate Microsoft Windows in general, and programs in the office 
 suite in particular. With that in mind, it'd be a waste not to 
 look for ways to "seamlessly" integrate that into our Python workflow.
 
@@ -68,7 +68,7 @@ via the use of *"System32/CScript.exe"*. After a few iterations of code
 refining, this is the current project status. 
 
 In case you are curious, *win32com.client* is also an interesting options, 
-since that gives you access to windows api in general (and a VBS runner 
+since that gives you access to Windows api in general (and a VBS runner 
 in particular). However, I consider win32com to already do too much, 
 and thus, be difficult to customize. It might be interesting to
 consider using win32 instead of subprocess in the future.

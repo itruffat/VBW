@@ -1,5 +1,5 @@
 import os
-from core.VBWrapperBase import VB_WRAPPER_BASE
+from VBCore.VBWrapperBase import VB_WRAPPER_BASE
 
 class VB_WRAPPER_SIMPLE_EXCEL(VB_WRAPPER_BASE):
 

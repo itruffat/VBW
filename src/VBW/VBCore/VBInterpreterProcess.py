@@ -1,5 +1,5 @@
 from subprocess import PIPE, Popen
-from core.VBError import VB_ERROR
+from VBCore.VBError import VB_ERROR
 import os
 
 
