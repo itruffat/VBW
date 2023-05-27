@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='VBW',
-    version='0.0.0a2',
+    version='0.0.0a3',
     author='itrufat',
     description='A wrapper to run VBS from Python.',
     long_description='A Wrapper to run VBS from Python.',

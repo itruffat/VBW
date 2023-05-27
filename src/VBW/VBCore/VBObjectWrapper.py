@@ -1,4 +1,4 @@
-from VBCore.VBWrapperBase import VB_WRAPPER_BASE
+from VBW.VBCore.VBWrapperBase import VB_WRAPPER_BASE
 
 
 class VB_OBJECT_WRAPPER(VB_WRAPPER_BASE):
