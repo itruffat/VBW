@@ -2,12 +2,12 @@ from setuptools import setup
 
 setup(
     name='VBW',
-    version='0.0.0a3',
+    version='0.0.0a4',
     author='itrufat',
     description='A wrapper to run VBS from Python.',
     long_description='A Wrapper to run VBS from Python.',
     long_description_content_type='text/markdown',
-    url='https://github.com/itruffat/JestingLang',
+    url='https://github.com/itruffat/VBW',
     packages=['VBW', 'VBW.VBCore', 'VBW.VBWrappers'],
     package_dir={'': 'src'},
     package_data={
