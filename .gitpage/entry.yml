@@ -1,0 +1,6 @@
+name: Microsoft's Visual Basic Wrapper
+category: python-utility 
+skip: False
+description : |
+   A Python wrapper that provides a straightforward interface for interacting with Microsoft Visual Basic by launching a Butler process that listens for and executes instructions.
+   This is especially useful for working with Excel or Word files that contain complex structures —like splicers— which may not be properly understood (or may be damaged) by other Python libraries such as **openpyxl**.
